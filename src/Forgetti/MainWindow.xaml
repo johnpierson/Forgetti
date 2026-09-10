@@ -155,7 +155,7 @@
                        FontWeight="Bold"
                        VerticalAlignment="Center" />
           </StackPanel>
-          <TextBlock Text="Revit remembers every file you open. Make it forget."
+          <TextBlock Text="Revit shows your recent files. Make it forget them."
                      Foreground="{DynamicResource Forgetti.ForegroundMuted}"
                      TextWrapping="Wrap"
                      Margin="0,6,0,0" />

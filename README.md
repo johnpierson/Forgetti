@@ -1,6 +1,6 @@
 # Forgetti
 
-**Revit remembers every file you open. Make it forget.**
+**Revit shows your recent files. Make it forget them.**
 
 [![build](https://github.com/johnpierson/Forgetti/actions/workflows/build.yml/badge.svg)](https://github.com/johnpierson/Forgetti/actions/workflows/build.yml)
 [![release](https://img.shields.io/github/v/release/johnpierson/Forgetti?label=release&color=ff5c8a)](https://github.com/johnpierson/Forgetti/releases/latest)
