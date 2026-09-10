@@ -31,6 +31,11 @@ Revit's Home page and File menu list every model you have opened recently. Befor
 screen-share, a class or a hand-over, that list is either noise or a leak, and Revit offers no
 way to clear it. Forgetti does, for every version on the machine at once.
 
+Forgetti is the free, open-source successor to the
+[Recent File Reseterer for Revit](https://parallaxteam.onfastspring.com/recent-file-reseterer-for-revit)
+from Parallax Team. The original is still available and still works just fine; Forgetti adds
+every version at once, a backup and undo, and a fresh coat of paint.
+
 ## Use
 
 1. **Close Revit.** It writes the list back when it exits, so anything forgotten while it is

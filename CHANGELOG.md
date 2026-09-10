@@ -6,8 +6,9 @@ All notable changes to Forgetti are recorded here. The format follows
 
 ## [1.0.0] - 2026-09-09
 
-The first release. Forgetti replaces an older, unreleased WinForms tool that cleared one Revit
-version at a time.
+The first release. Forgetti is the open-source successor to the
+[Recent File Reseterer for Revit](https://parallaxteam.onfastspring.com/recent-file-reseterer-for-revit)
+from Parallax Team, which cleared one Revit version at a time and remains available.
 
 ### Added
 
@@ -20,10 +21,10 @@ version at a time.
   neubrutalist look.
 - Development switches: `--dark`, `--revit-running`, `--sample`, `--screenshot <path>`.
 
-### Fixed, relative to the old tool
+### Changed, relative to the original
 
+- Every Revit version on the machine is listed and can be cleared together.
 - `Revit.ini` keeps its original encoding (UTF-16 LE with a byte-order mark) and line endings.
-  The old tool rewrote the file as UTF-8.
 - Only the `File1=`, `File2=`, ... entries are removed. The section header and every other
   section are left exactly as they were.
 
