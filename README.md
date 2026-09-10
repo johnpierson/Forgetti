@@ -113,7 +113,7 @@ set hard. Press a button and it drops onto its own shadow. The palette values ar
 exactly, so the two sit side by side without a seam. The switch in the corner flips between
 paper and ink.
 
-## Licence
+## License
 
 Forgetti is released under the [BSD 3-Clause License](LICENSE). Space Grotesk is embedded under
 the [SIL Open Font License 1.1](src/Forgetti/Fonts/SpaceGrotesk-OFL.txt).

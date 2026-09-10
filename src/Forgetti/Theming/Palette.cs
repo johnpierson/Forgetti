@@ -3,11 +3,11 @@ using System.Windows.Media;
 namespace Forgetti.Theming;
 
 /// <summary>
-/// The colours for one mode.
+/// The colors for one mode.
 ///
 /// These are Interlude's neubrutalist palettes, value for value, so a Forgetti window sitting
 /// next to an Interlude form reads as the same family. Every outline is the same black on
-/// purpose: the style gets its structure from outline and offset, not from a hierarchy of greys.
+/// purpose: the style gets its structure from outline and offset, not from a hierarchy of grays.
 /// </summary>
 internal sealed class Palette
 {

@@ -73,7 +73,7 @@ public static class Tracking
         {
             block.Inlines.Add(new Run(value[i].ToString()));
 
-            // No trailing spacer: it would push a centred header off centre.
+            // No trailing spacer: it would push a centered header off center.
             if (i < value.Length - 1)
             {
                 block.Inlines.Add(new Run(" ") { FontSize = spacerSize });

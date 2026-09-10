@@ -86,7 +86,7 @@ jobs:
           body: |
             Download `Forgetti.exe` and run it. Nothing to install: it needs only .NET Framework
             4.8, which every Windows 10 and 11 machine already has. The zip holds the same file
-            plus its licences.
+            plus its licenses.
 
             Close Revit first. Tick the versions to forget, press **Forget**. **Undo** puts the
             lists back if you change your mind.

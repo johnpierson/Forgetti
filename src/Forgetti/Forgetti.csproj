@@ -47,8 +47,8 @@
 
   <!--
     Space Grotesk is embedded so the window looks the same on every machine. These are the
-    static instances, not the variable font: WPF cannot drive variable axes and would synthesise
-    a smeared bold. SIL Open Font License 1.1; the licence text ships beside the binary.
+    static instances, not the variable font: WPF cannot drive variable axes and would synthesize
+    a smeared bold. SIL Open Font License 1.1; the license text ships beside the binary.
   -->
   <ItemGroup>
     <Resource Include="Fonts\SpaceGrotesk-Regular.ttf" />

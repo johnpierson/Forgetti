@@ -1,10 +1,10 @@
 <!--
     Forgetti's control styles: Interlude's neubrutalist look, cut down to the controls this
-    window uses. Every colour is a DynamicResource lookup of a key Theming/Theme.cs writes at
+    window uses. Every color is a DynamicResource lookup of a key Theming/Theme.cs writes at
     run time, which is what makes the paper/ink switch a dictionary update rather than a rebuild.
 
     The look in one sentence: heavy black outlines, square corners, a solid unblurred shadow
-    offset down and to the right, loud flat colour, and type set hard. Press a button and it
+    offset down and to the right, loud flat color, and type set hard. Press a button and it
     drops onto its own shadow.
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
