@@ -1,0 +1,95 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, such as 1.0.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Work out the version
+        id: version
+        shell: pwsh
+        run: |
+          $version = if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+            '${{ github.event.inputs.version }}'
+          } else {
+            '${{ github.ref_name }}'.TrimStart('v')
+          }
+
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            throw "Version '$version' is not major.minor.patch."
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Releasing $version"
+
+      - name: Test
+        run: dotnet test Forgetti.slnx -c Release -p:ContinuousIntegrationBuild=true
+
+      - name: Build
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: dotnet build src/Forgetti/Forgetti.csproj -c Release -p:ContinuousIntegrationBuild=true -p:Version=$env:VERSION
+
+      - name: Package
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $bin = 'src/Forgetti/bin/Release/net48'
+          $exe = Join-Path $bin 'Forgetti.exe'
+
+          # The tag is the version. The binary must agree with it, or the release page and the
+          # file's own properties tell two different stories.
+          $fileVersion = (Get-Item $exe).VersionInfo.FileVersion
+          if (-not $fileVersion.StartsWith($env:VERSION)) {
+            throw "Forgetti.exe reports version $fileVersion, not $env:VERSION."
+          }
+
+          New-Item -ItemType Directory -Path release/Forgetti -Force | Out-Null
+          Copy-Item $exe release/Forgetti/
+          Copy-Item (Join-Path $bin 'Forgetti.exe.config') release/Forgetti/
+          Copy-Item (Join-Path $bin 'Fonts/SpaceGrotesk-OFL.txt') release/Forgetti/
+          Copy-Item LICENSE release/Forgetti/LICENSE.txt
+
+          $zip = "release/Forgetti-$env:VERSION.zip"
+          Compress-Archive -Path release/Forgetti/* -DestinationPath $zip
+          Copy-Item $exe release/Forgetti.exe
+          Write-Host "packaged $zip"
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            release/Forgetti-*.zip
+            release/Forgetti.exe
+          generate_release_notes: true
+          body: |
+            Download `Forgetti.exe` and run it. Nothing to install: it needs only .NET Framework
+            4.8, which every Windows 10 and 11 machine already has. The zip holds the same file
+            plus its licences.
+
+            Close Revit first. Tick the versions to forget, press **Forget**. **Undo** puts the
+            lists back if you change your mind.
+
+            The file is not code-signed, so Windows SmartScreen may ask once. Choose
+            *More info*, then *Run anyway*.

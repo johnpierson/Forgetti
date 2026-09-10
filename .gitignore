@@ -1,0 +1,9 @@
+# Build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Screenshots rendered by `Forgetti.exe --screenshot` land here by convention
+artifacts/

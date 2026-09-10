@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Forgetti: makes Revit forget its recent files.
+
+    .NET Framework 4.8 on purpose. Every Windows 10/11 machine that can run Revit already has
+    it, so the tool is one .exe with nothing to install. A .NET 8 build would either need the
+    desktop runtime on every machine it is sent to, or ship as a 70 MB self-contained bundle to
+    remove a dozen lines from an .ini file.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Forgetti</RootNamespace>
+    <AssemblyName>Forgetti</AssemblyName>
+    <ApplicationIcon>forgetti.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Deterministic>true</Deterministic>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Product>Forgetti</Product>
+    <Authors>John Pierson</Authors>
+    <Company>John Pierson</Company>
+    <Copyright>Copyright (c) 2026 John Pierson</Copyright>
+    <Description>Makes Revit forget its recent files.</Description>
+    <!-- The release workflow overrides this with the tag, so the binary always agrees with the release page. -->
+    <Version>1.0.0</Version>
+    <RepositoryUrl>https://github.com/johnpierson/Forgetti</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!-- Warnings are errors in CI only, so the local inner loop stays forgiving while main stays clean. -->
+  <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Forgetti.Tests" />
+  </ItemGroup>
+
+  <!--
+    Space Grotesk is embedded so the window looks the same on every machine. These are the
+    static instances, not the variable font: WPF cannot drive variable axes and would synthesise
+    a smeared bold. SIL Open Font License 1.1; the licence text ships beside the binary.
+  -->
+  <ItemGroup>
+    <Resource Include="Fonts\SpaceGrotesk-Regular.ttf" />
+    <Resource Include="Fonts\SpaceGrotesk-Medium.ttf" />
+    <Resource Include="Fonts\SpaceGrotesk-Bold.ttf" />
+    <Resource Include="Fonts\SpaceGrotesk-Light.ttf" />
+    <None Include="Fonts\SpaceGrotesk-OFL.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

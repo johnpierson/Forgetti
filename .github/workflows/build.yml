@@ -1,0 +1,78 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Windows is not a preference here: Forgetti is a WPF app for people who run Revit.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          # The .NET 10 SDK compiles net48 as well; the targeting pack ships with the runner image.
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore Forgetti.slnx
+
+      - name: Build
+        run: dotnet build Forgetti.slnx -c Release --no-restore -p:ContinuousIntegrationBuild=true
+
+      - name: Test
+        run: >
+          dotnet test tests/Forgetti.Tests/Forgetti.Tests.csproj
+          -c Release --no-build
+          --logger "trx;LogFileName=results.trx"
+          --results-directory artifacts/test-results
+
+      # The unit tests cover the file logic. This covers the other half: the window must open,
+      # bind, lay out and render without throwing, on a machine that is not the author's.
+      - name: Smoke-test the window
+        shell: pwsh
+        timeout-minutes: 5
+        run: |
+          $exe = 'src/Forgetti/bin/Release/net48/Forgetti.exe'
+          & $exe --sample --screenshot artifacts/screenshots/sample.png
+          & $exe --sample --dark --screenshot artifacts/screenshots/sample-dark.png
+
+          foreach ($png in 'artifacts/screenshots/sample.png', 'artifacts/screenshots/sample-dark.png') {
+            if (-not (Test-Path $png)) { throw "$png was not written." }
+            $size = (Get-Item $png).Length
+            if ($size -lt 10KB) { throw "$png is only $size bytes; the window did not render." }
+            Write-Host "$png rendered ($size bytes)."
+          }
+
+      - name: Upload the build
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: forgetti
+          path: |
+            src/Forgetti/bin/Release/net48/Forgetti.exe
+            src/Forgetti/bin/Release/net48/Forgetti.exe.config
+            src/Forgetti/bin/Release/net48/Fonts/SpaceGrotesk-OFL.txt
+          if-no-files-found: error
+
+      - name: Upload screenshots and test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts
+          path: artifacts/
+          if-no-files-found: ignore
