@@ -47,9 +47,17 @@ jobs:
         shell: pwsh
         timeout-minutes: 5
         run: |
-          $exe = 'src/Forgetti/bin/Release/net48/Forgetti.exe'
-          & $exe --sample --screenshot artifacts/screenshots/sample.png
-          & $exe --sample --dark --screenshot artifacts/screenshots/sample-dark.png
+          $exe = Resolve-Path 'src/Forgetti/bin/Release/net48/Forgetti.exe'
+          $out = New-Item -ItemType Directory -Path artifacts/screenshots -Force
+
+          # A GUI exe returns to the shell immediately, so the process has to be waited on
+          # explicitly or the check below runs before the window has even opened.
+          foreach ($flags in @('--sample'), @('--sample', '--dark')) {
+            $name = if ($flags -contains '--dark') { 'sample-dark.png' } else { 'sample.png' }
+            $png = Join-Path $out.FullName $name
+            $process = Start-Process -FilePath $exe -ArgumentList ($flags + @('--screenshot', $png)) -Wait -PassThru
+            if ($process.ExitCode -ne 0) { throw "Forgetti.exe $flags exited with code $($process.ExitCode)." }
+          }
 
           foreach ($png in 'artifacts/screenshots/sample.png', 'artifacts/screenshots/sample-dark.png') {
             if (-not (Test-Path $png)) { throw "$png was not written." }
